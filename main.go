@@ -80,18 +80,22 @@ func (d sshfsDriver) Mount(r volume.Request) volume.Response {
 	fi, err := os.Lstat(m)
 
 	if os.IsNotExist(err) {
+		log.Printf("Volume mountpoint %s does not exist, creating\n", m)
 		if err := os.MkdirAll(m, 0755); err != nil {
+			log.Printf("Creating volume mountpoint %s failed\n", m)
 			return volume.Response{Err: err.Error()}
 		}
 	} else if err != nil {
+		log.Printf("Volume mountpoint %s exists but os.Lstat returned error %s\n", m, err.Error())
 		return volume.Response{Err: err.Error()}
 	}
 
 	if fi != nil && !fi.IsDir() {
-		return volume.Response{Err: fmt.Sprintf("%v already exist and it's not a directory", m)}
+		return volume.Response{Err: fmt.Sprintf("%v already exist and it's not a directory\n", m)}
 	}
 
 	if err := d.mountVolume(r.Name, m); err != nil {
+		log.Printf("Mounting volume %s failed with error %s\n", m, err.Error())
 		return volume.Response{Err: err.Error()}
 	}
 
