@@ -142,7 +142,7 @@ func (d sshfsDriver) List(r volume.Request) volume.Response {
 	return volume.Response{Volumes: vols}
 }
 
-func (d *sshfsDriver) Capabilities(r volume.Request) volume.Response {
+func (d sshfsDriver) Capabilities(r volume.Request) volume.Response {
 	return volume.Response{Scope: "global"}
 }
 
