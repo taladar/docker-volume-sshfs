@@ -1,15 +1,17 @@
 language: go
 go:
-  - 1.4.2
+- 1.4.2
 sudo: false
 env:
-  - "PATH=/home/travis/gopath/bin:$PATH"
+- PATH=/home/travis/gopath/bin:$PATH
 script:
-  - GOOS=linux GOARCH=amd64 go build -v
+- GOOS=linux GOARCH=amd64 go build -v
 deploy:
   provider: releases
-  api_key: "${GITHUB_TOKEN:?}"
   file: "docker-volume-sshfs"
   skip_cleanup: true
+  api_key:
+    secure: QRdXLeX64lTapwXwDXj6B7tCUSzTh3kVGnwWdekxSxiEGhKtpXB/m7ep7yJlGySt8wqAm138Eukz4IoHtUXL41AmpX40sg1j/ChIQhu7O5caHksiEIraS2rs+qRSlJdvGUdlwJcPNcBFORWg1sbBBMCiJ8zU7jOpYgsb2w71dD/68CJGimm95sPRpYRqEsJV7WcPZn9GzFAFeypVmbccnBuhY6NkilqEIngdp3Ne2KRHnPZCry2TAxOfTOUfGcy52IppZ+5pi6WyDEJdur/Za7INWZcpO73beJqiCGc5iGxXSfriVcOWcQpwVVYyjTGKyi/IoD0pTbJEtz2SAXnmMUyOqAmOFvleGGIjJvjWwAYSgf4A29zVPtKcHH1JBdI1bho1bp8TPRnnYQeIBARA4juxea8jCZfQWw+/EO2ym5QtDmxgal9BKfMD10mW6JUlhZlkf8QfaAPjlq30u4b2wlI4P5rmxx+hmkfpVEAHmzZNY8Mz1mAqaojOGHEHwcxlAS7m3hAZUoXdTVGBi2jgvcBHEkze7Y2cxp+82PoyIrfndqfjsKF+RGrbO18gvZenICH2SLNZa3dTB8mUpGZcbUAhF22+iwigARDcb9nWyHN3LGPrGcrUj6jW1qMFxOopaBnAbUT7gyUuwf9jDhIMnQX45Ed0CFI4KygnZTWlssg=
   on:
     tags: true
+    repo: taladar/docker-volume-sshfs
