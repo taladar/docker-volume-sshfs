@@ -176,12 +176,12 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 		log.Printf("Mount command failed when starting it: %s\n", err)
 		return err
 	}
+        errstr, readerr :=  ioutil.ReadAll(stderr)
+        if readerr != nil {
+          log.Printf("Reading stderr of command failed with error %s\n", readerr.Error())
+        }
 	if err := ecmd.Wait(); err != nil {
 		log.Printf("Mount command failed while waiting for it to complete: %s\n", err.Error())
-		errstr, readerr :=  ioutil.ReadAll(stderr)
-		if readerr != nil {
-                  log.Printf("Reading stderr of failed command failed with error %s\n", readerr.Error())
-		}
 		log.Printf("Command stderr output: %s\n", errstr)
 		return err
 	}
