@@ -167,9 +167,9 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 	cmd := fmt.Sprintf("sshfs %s  %s", name, destination)
         log.Printf("Attempting to mount %s to %s using command %s\n", name, destination, cmd)
 	ecmd := exec.Command("sh", "-c", cmd)
-        stderr, err := ecmd.StdErrPipe()
+        stderr, err := ecmd.StderrPipe()
 	if err != nil {
-		log.Printf("Unable to open stderr before running mount command: %s\n", err)
+		log.Printf("Unable to open stderr before running mount command: %s\n", err.Error())
 		return err
 	}
 	if err := ecmd.Start(); err != nil {
@@ -177,8 +177,12 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 		return err
 	}
 	if err := ecmd.Wait(); err != nil {
-		log.Printf("Mount command failed while waiting for it to complete: %s\n", err)
-		log.Printf("Error output: %s\n", ioutil.ReadAll(stderr))
+		log.Printf("Mount command failed while waiting for it to complete: %s\n", err.Error())
+		errstr, readerr :=  ioutil.ReadAll(stderr)
+		if readerr != nil {
+                  log.Printf("Reading stderr of failed command failed with error %s\n", readerr.Error())
+		}
+		log.Printf("Command stderr output: %s\n", errstr)
 		return err
 	}
 	return nil
