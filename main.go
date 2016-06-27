@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"io/ioutil"
 
 	"github.com/docker/go-plugins-helpers/volume"
 )
@@ -164,20 +165,20 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 		return fmt.Errorf("invalid name, use [user@]host#[dir]")
 	}
 	cmd := fmt.Sprintf("sshfs %s  %s", name, destination)
-  log.Printf("Attempting to mount %s to %s using command %s\n", name, destination, cmd)
+        log.Printf("Attempting to mount %s to %s using command %s\n", name, destination, cmd)
 	ecmd := exec.Command("sh", "-c", cmd)
-  stderr, err := cmd.StdErrPipe()
+        stderr, err := ecmd.StdErrPipe()
 	if err != nil {
 		log.Printf("Unable to open stderr before running mount command: %s\n", err)
 		return err
 	}
-	if err := cmd.Start(); err != nil {
+	if err := ecmd.Start(); err != nil {
 		log.Printf("Mount command failed when starting it: %s\n", err)
 		return err
 	}
-	if err := cmd.Wait(); err != nil {
+	if err := ecmd.Wait(); err != nil {
 		log.Printf("Mount command failed while waiting for it to complete: %s\n", err)
-		log.Printf("Error output: %s\n", ioutil.ReadAll(stdout))
+		log.Printf("Error output: %s\n", ioutil.ReadAll(stderr))
 		return err
 	}
 	return nil
