@@ -164,7 +164,7 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 	} else {
 		return fmt.Errorf("invalid name, use [user@]host#[dir]")
 	}
-	cmd := fmt.Sprintf("/usr/local/bin/docker-volume-sshfs-helper.sh %s %s", name, destination)
+	cmd := fmt.Sprintf("/usr/local/bin/docker-volume-sshfs-helper.sh mount %s %s", name, destination)
         log.Printf("Attempting to mount %s to %s using command %s\n", name, destination, cmd)
 	ecmd := exec.Command("sh", "-c", cmd)
         stderr, err := ecmd.StderrPipe()
@@ -189,7 +189,7 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 }
 
 func (d *sshfsDriver) unmountVolume(target string) error {
-	cmd := fmt.Sprintf("umount %s", target)
+	cmd := fmt.Sprintf("/usr/local/bin/docker-volume-sshfs-helper.sh umount %s", target)
 	return exec.Command("sh", "-c", cmd).Run()
 }
 
