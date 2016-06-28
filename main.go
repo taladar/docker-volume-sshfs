@@ -164,7 +164,7 @@ func (d *sshfsDriver) mountVolume(name, destination string) error {
 	} else {
 		return fmt.Errorf("invalid name, use [user@]host#[dir]")
 	}
-	cmd := fmt.Sprintf("sshfs -o IdentityFile=/root/.ssh/id_rsa -o follow_symlinks -o transform_symlinks -o sshfs_debug %s %s", name, destination)
+	cmd := fmt.Sprintf("sshfs -o IdentityFile=/root/.ssh/id_rsa -o uid=1000 -o gid=1000 -o allow_other -o idmap=user -o follow_symlinks -o transform_symlinks -o sshfs_debug %s %s", name, destination)
         log.Printf("Attempting to mount %s to %s using command %s\n", name, destination, cmd)
 	ecmd := exec.Command("sh", "-c", cmd)
         stderr, err := ecmd.StderrPipe()
