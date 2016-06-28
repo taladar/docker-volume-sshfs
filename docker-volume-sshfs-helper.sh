@@ -47,7 +47,7 @@ if [[ "${mode}" == "mount" ]]; then
   mkdir -p "${mount_point}"
   mkdir -p "${sshfs_mount_point}"
 
-  sshfs -o IdentityFile=/root/.ssh/id_rsa -o uid=1000 -o gid=1000 -o default_permissions -o allow_other -o idmap=user -o follow_symlinks -o transform_symlinks -o sshfs_debug "${ssh_url}" "${sshfs_mount_point}"
+  sshfs -o IdentityFile=/root/.ssh/id_rsa -o uid=1000 -o gid=1000 -o default_permissions -o allow_other -o idmap=user -o sshfs_debug "${ssh_url}" "${sshfs_mount_point}"
 
   bindfs -o nonempty -u 1000 -g 1000 -o allow_other --create-for-user=1000 --create-for-group=1000 --chown-ignore --chgrp-ignore "${bindfs_mount_source}" "${bindfs_mount_point}"
 
@@ -62,7 +62,7 @@ if [[ "${mode}" == "umount" ]]; then
 	umount "${sshfs_mount_point}"
 
 	pushd /var/lib/docker-volumes/_sshfs
-  	rmdir --ignore-fail-on-non-empty -p "$(echo "${sshfs_mount_point}" | sed -e 's!^/var/lib/docker-volumes/_sshfs/!!')"
-		rmdir --ignore-fail-on-non-empty -p "$(echo "${bindfs_mount_point}" | sed -e 's!^/var/lib/docker-volumes/_sshfs/!!')"
+  	  rmdir --ignore-fail-on-non-empty -p "$(echo "${sshfs_mount_point}" | sed -e 's!^/var/lib/docker-volumes/_sshfs/!!')"
+	  rmdir --ignore-fail-on-non-empty -p "$(echo "${mount_point}" | sed -e 's!^/var/lib/docker-volumes/_sshfs/!!')"
 	popd
 fi
